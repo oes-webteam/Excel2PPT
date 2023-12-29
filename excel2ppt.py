@@ -229,6 +229,14 @@ for row_number in range(2, max_row + 1):
     # Since we are modifying the title font and placeholder box we need to grab the template again.
     # TODO: If title is long, add to dictionary and then handle all rows with this issue instead of reloading.
     
+    if title_is_long:
+        # Reload the existing PowerPoint presentation template
+        presentation_path = 'QuadChartTemplate.pptx'
+        presentation = Presentation(presentation_path)
+
+        # Access the slide - usually the first slide
+        slide = presentation.slides[0]
+
 
 # Close the workbook
 workbook.close()
