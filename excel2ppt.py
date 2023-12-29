@@ -71,8 +71,9 @@ for row_number in range(2, max_row + 1):
     directorate_priority =  sheet.cell(row=row_number, column=38).value
     
     # Format our dates
-    ddd = ddd.strftime("%d-%b-%y")
-    need_by = need_by.strftime("%d-%b-%y")
+    dateformat = "%d-%b-%y"
+    ddd = ddd.strftime(dateformat)
+    need_by = need_by.strftime(dateformat)
     
     # Add data to the slide
     
