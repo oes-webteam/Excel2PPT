@@ -94,7 +94,7 @@ for row_number in range(2, max_row + 1):
                 run.font.size = Pt(18)
         upper_title.left = Inches(1.45)
         upper_title.top = Inches(0)
-        upper_title.width = Inches(10)
+        upper_title.width = Inches(8.5)
         upper_title.height = Inches(1)
         
         # Flag title as long to reload PowerPoint template.  This will affect the other rows too.
