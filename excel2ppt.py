@@ -28,7 +28,7 @@ sheet = workbook.active
 max_row = sheet.max_row
 
 # Loop over rows
-# Assuming data starts from the second row (1-indexed)
+# Assuming data starts from the second row because of header (1-indexed)
 for row_number in range(2, max_row + 1):  
     # Access data in each column of the current row
     submitting_org =        sheet.cell(row=row_number, column=1).value
@@ -96,13 +96,12 @@ for row_number in range(2, max_row + 1):
         upper_title.width = Inches(10)
         upper_title.height = Inches(1)
         
-        
+        # Flag title as long to reload PowerPoint template.  This will affect the other rows too.
         title_is_long = True
     else:
         upper_title = slide.shapes.placeholders[title_index]
         slide.shapes.placeholders[title_index].text = submitting_org
         slide.shapes.placeholders[title_index].text += " - " + ufr_title
-
 
     # Upper left quad
     ulq = slide.shapes.placeholders[upper_left_quad]
@@ -236,7 +235,6 @@ for row_number in range(2, max_row + 1):
 
         # Access the slide - usually the first slide
         slide = presentation.slides[0]
-
 
 # Close the workbook
 workbook.close()
