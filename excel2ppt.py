@@ -76,7 +76,7 @@ for row_number in range(2, max_row + 1):
     need_by = need_by.strftime(dateformat)
     
     # Add data to the slide
-    
+    # TODO: The add_paragraph() method adds a new line...How do we keep that from happening?
     # Upper title
     # TODO: I need to check to make sure if text length > 40, lower the font size
     # TODO: I need to figure out paragraph line height issues
@@ -160,6 +160,7 @@ for row_number in range(2, max_row + 1):
     r = p.add_run()
     
 # Lower left quad
+# Table might be needed: https://python-pptx.readthedocs.io/en/latest/user/table.html
     poc = slide.shapes.placeholders[poc_index]
     p = poc.text_frame.add_paragraph()
     r = p.add_run()
@@ -227,7 +228,7 @@ for row_number in range(2, max_row + 1):
     lrq.text_frame.clear()
     
     # Since we are modifying the title font and placeholder box we need to grab the template again.
-    # TODO: If title is long, add to dictionary and then handle all rows with this issue instead of reloading.
+    # TODO: If title is long, add to queue and then handle all rows with this issue instead of reloading.
     
     if title_is_long:
         # Reload the existing PowerPoint presentation template
