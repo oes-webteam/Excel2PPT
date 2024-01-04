@@ -207,7 +207,7 @@ for row_number in range(2, max_row + 1):
     r = p.add_run()
     r.text = " " + str(cdr_priority_loe)
     r = p.add_run()
-    
+
     r.text = "\nCandidate for Incremental Funding:"
     r.font.bold = True
     r.font.underline = True
@@ -216,7 +216,7 @@ for row_number in range(2, max_row + 1):
     r = p.add_run()
 
     # Save the updated presentation
-    updated_presentation_path = f'{ufr_title}.pptx'
+    updated_presentation_path = f'output/{ufr_title}.pptx'
     presentation.save(updated_presentation_path)
     print(f"Updated presentation saved to {updated_presentation_path}")
     
