@@ -1,4 +1,5 @@
 import openpyxl
+import re 
 from pptx import Presentation
 from pptx.util import Pt, Inches
 from datetime import datetime
@@ -16,9 +17,29 @@ upper_left_quad = 11
 upper_right_quad = 12
 poc_index = 13
 lower_right_quad = 14
+table_index = 15
 
-# Load the Excel file
+# Clean the Excel file from any blanks and replace with unicode space
 excel_file_path = 'UFRDATA-org.xlsx'
+workbook = openpyxl.load_workbook(excel_file_path)
+
+# Select the active sheet or a specific sheet by name
+sheet = workbook.active
+
+# Iterate through the rows and columns of the worksheet
+for row in sheet.iter_rows():
+    for cell in row:
+        if cell.value is None:
+            cell.value = '\u0020'  # Replace with unicode space
+
+# Save the modified workbook
+workbook.save('cleaned_ufrdata.xlsx')
+
+# Close the workbook
+workbook.close()
+
+# Load the cleaned UFR Excel file
+excel_file_path = 'cleaned_ufrdata.xlsx'
 workbook = openpyxl.load_workbook(excel_file_path)
 
 # Select the active sheet or a specific sheet by name
@@ -149,7 +170,7 @@ for row_number in range(2, max_row + 1):
     r.font.bold = True
     r.font.underline = True
     r = p.add_run()
-    r.text = " " + str(if_not_funded)
+    r.text = " " + str(impact_if_not_funded)
     r = p.add_run()
     
     r.text = "\nAction taken to mitigate this specific UFR:"
@@ -159,8 +180,7 @@ for row_number in range(2, max_row + 1):
     r.text = " " + str(mitigation_action)
     r = p.add_run()
     
-# Lower left quad
-# Table might be needed: https://python-pptx.readthedocs.io/en/latest/user/table.html
+    # Lower left quad
     poc = slide.shapes.placeholders[poc_index]
     p = poc.text_frame.add_paragraph()
     r = p.add_run()
@@ -170,7 +190,32 @@ for row_number in range(2, max_row + 1):
     r.text = " " + str(ufr_poc) + ", " + str(submitting_org)
     r = p.add_run()
 
-# Lower Right quad
+    # Make table
+    table_placeholder = slide.placeholders[table_index]
+    table = table_placeholder.table
+    cell = table.cell(1, 0)
+    cell.text = str(funding_category)
+    cell = table.cell(1, 1)
+    cell.text = "$" + str('{0:,.0f}'.format(int(fy24)/1000))
+    cell = table.cell(1, 2)
+    cell.text = "$" + str('{0:,.0f}'.format(int(fy25)/1000))
+    cell = table.cell(1, 3)
+    cell.text = "$" + str('{0:,.0f}'.format(int(fy26)/1000))
+    cell = table.cell(1, 4)
+    cell.text = "$" + str('{0:,.0f}'.format(int(fy_total)/1000))
+    paragraph = cell.text_frame.paragraphs[0]
+    paragraph.font.bold = True
+
+    
+    # Format table cells from above
+    i = 0
+    while i < 5:
+        cell = table.rows[1].cells[i]
+        paragraph = cell.text_frame.paragraphs[0]
+        paragraph.font.size = Pt(13)
+        i = i + 1
+    
+    # Lower Right quad
     lrq = slide.shapes.placeholders[lower_right_quad]
     p = lrq.text_frame.add_paragraph()
     r = p.add_run()
@@ -207,7 +252,7 @@ for row_number in range(2, max_row + 1):
     r = p.add_run()
     r.text = " " + str(cdr_priority_loe)
     r = p.add_run()
-
+    
     r.text = "\nCandidate for Incremental Funding:"
     r.font.bold = True
     r.font.underline = True
@@ -216,7 +261,8 @@ for row_number in range(2, max_row + 1):
     r = p.add_run()
 
     # Save the updated presentation
-    updated_presentation_path = f'output/{ufr_title}.pptx'
+    cleaned_filename = re.sub(r'[\\/*?:"<>|]'," ",ufr_title)
+    updated_presentation_path = f'output\{cleaned_filename}.pptx'
     presentation.save(updated_presentation_path)
     print(f"Updated presentation saved to {updated_presentation_path}")
     
